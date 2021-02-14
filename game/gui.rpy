@@ -52,20 +52,26 @@ define gui.interface_text_color = u'#000000'
 
 ## 字体和字体大小 #####################################################################
 
+## 所有字体都改为汉仪细简黑简。
 ## 用于游戏内文本的字体。
-define gui.text_font = "SourceHanSansLite.ttf"
+# define gui.text_font = "SourceHanSansLite.ttf"
+define gui.text_font = "hyxjhj.ttf"
 
 ## 用于角色名称的字体。
-define gui.name_text_font = "SourceHanSansLite.ttf"
+# define gui.name_text_font = "SourceHanSansLite.ttf"
+define gui.name_text_font = "hyxjhj.ttf"
 
 ## 用于游戏外文本的字体。
-define gui.interface_text_font = "SourceHanSansLite.ttf"
+# define gui.interface_text_font = "SourceHanSansLite.ttf"
+define gui.interface_text_font = "hyxjhj.ttf"
 
 ## 普通对话文本的大小。
-define gui.text_size = 22
+# define gui.text_size = 22
+define gui.text_size = 26
 
 ## 角色名称的大小。
-define gui.name_text_size = 30
+# define gui.name_text_size = 30
+define gui.name_text_size = 28
 
 ## 游戏用户界面中文本的大小。
 define gui.interface_text_size = 22
@@ -102,8 +108,10 @@ define gui.textbox_yalign = 1.0
 
 ## 叙述角色名称相对文本框的位置。可以是从左侧或顶部起的整数像素，或设为“0.5”来放
 ## 置到正中。
-define gui.name_xpos = 240
-define gui.name_ypos = 0
+# define gui.name_xpos = 240
+# define gui.name_ypos = 0
+define gui.name_xpos = 174
+define gui.name_ypos = -30
 
 ## 角色名称的水平对齐方式。0.0 为左侧对齐，0.5 为居中显示，而 1.0 为右侧对齐。
 define gui.name_xalign = 0.0
@@ -113,7 +121,8 @@ define gui.namebox_width = None
 define gui.namebox_height = None
 
 ## 包含角色名称的框的边界尺寸，以左、上、右、下顺序排列。
-define gui.namebox_borders = Borders(5, 5, 5, 5)
+# define gui.namebox_borders = Borders(5, 5, 5, 5)
+define gui.namebox_borders = Borders(68, 5, 68, 5)
 
 ## 若为True，则名称框的背景将被平铺；若为False，则将缩放名称框的背景。
 define gui.namebox_tile = False
@@ -121,11 +130,13 @@ define gui.namebox_tile = False
 
 ## 对话框相对于文本框的位置。可以是相对于文本框从左侧或顶部起的整数像素，或设
 ## 为“0.5”来放置到正中。
-define gui.dialogue_xpos = 268
+# define gui.dialogue_xpos = 268
+define gui.dialogue_xpos = 242
 define gui.dialogue_ypos = 50
 
 ## 对话文本的最大宽度（以像素为单位）。
-define gui.dialogue_width = 744
+# define gui.dialogue_width = 744
+define gui.dialogue_width = 796
 
 ## 对话文本的水平对齐方式。0.0 为左侧对齐，0.5 为居中显示，而 1.0 为右侧对齐。
 define gui.dialogue_text_xalign = 0.0

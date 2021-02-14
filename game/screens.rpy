@@ -109,16 +109,15 @@ screen say(who, what):
             window:
                 id "namebox"
                 style "namebox"
-                text who id "who"
+                text who id "who" at say_text_fade
+                at say_namebox_trans
 
-        text what id "what"
-
+        text what id "what" at say_text_fade
 
     ## 如果有对话框头像，会将其显示在文本之上。请不要在手机界面下显示这个，因为
     ## 没有空间。
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0
-
 
 ## 通过 Character 对象使名称框可用于样式化。
 init python:
@@ -132,6 +131,20 @@ style say_thought is say_dialogue
 style namebox is default
 style namebox_label is say_label
 
+transform say_text_fade:
+    alpha 0.0
+    pause 0.5
+    linear 1.0 alpha 1.0
+
+transform say_windows_trans:
+    xalign 0.5
+    yalign 1.0
+    yoffset 190
+    linear 0.5 yoffset 0
+
+transform say_namebox_trans:
+    xzoom 0.0
+    linear 0.5 xzoom 1.0
 
 style window:
     xalign 0.5
@@ -139,7 +152,8 @@ style window:
     yalign gui.textbox_yalign
     ysize gui.textbox_height
 
-    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    #background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    background At("gui/textbox.png", say_windows_trans)
 
 style namebox:
     xpos gui.name_xpos
@@ -153,12 +167,15 @@ style namebox:
 
 style say_label:
     properties gui.text_properties("name", accent=True)
+    # 角色名字粗体
+    bold True
     xalign gui.name_xalign
     yalign 0.5
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
-
+    # 指定文本颜色为黑色
+    color "#000000"
     xpos gui.dialogue_xpos
     xsize gui.dialogue_width
     ypos gui.dialogue_ypos
