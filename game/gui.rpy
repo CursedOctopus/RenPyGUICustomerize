@@ -10,7 +10,15 @@ init offset = -2
 init python:
     gui.init(1280, 720)
 
+## 自定义界面设置
 
+## 自定义界面frame背景图
+define gui.frame_bg = "gui/screen_frame_base.png"
+## frame背景border信息
+define gui.frame_bg_border = Borders(4, 4, 4, 4)
+## frame背景图配色方案
+define gui.frame_fill_color = "#f9f9f9"
+define gui.frame_stroke_color = "#ffffff"
 
 ################################################################################
 ## GUI配置变量
@@ -302,7 +310,7 @@ define gui.frame_tile = False
 define gui.bar_size = 25
 #define gui.scrollbar_size = 12
 define gui.scrollbar_size = 7
-define gui.slider_size = 25
+define gui.slider_size = 7
 
 ## 如果条图应平铺，则为 True。 如果应该线性缩放，则为 False。
 define gui.bar_tile = False

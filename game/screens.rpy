@@ -67,11 +67,17 @@ style vscrollbar:
     thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
 
 style slider:
+    thumb_offset 9
+    left_gutter 11
+    right_gutter 11 
     ysize gui.slider_size
     base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
     thumb "gui/slider/horizontal_[prefix_]thumb.png"
 
 style vslider:
+    thumb_offset 9
+    top_gutter 11
+    bottom_gutter 11   
     xsize gui.slider_size
     base_bar Frame("gui/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
     thumb "gui/slider/vertical_[prefix_]thumb.png"
@@ -342,7 +348,7 @@ screen quick_menu():
                 background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
                 add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_system_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
                 foreground Text("SYSTEM", xalign=0.5, yalign = 0.5, size = 15)
-                action ShowMenu("preferences")
+                action ShowMenu("system")
 
             at quick_menu_buttons_transform
 
@@ -921,6 +927,213 @@ style slot_button:
 style slot_button_text:
     properties gui.button_text_properties("slot_button")
 
+## 自定义通用设置界面
+screen setting_bg(sc_title, en_title):
+
+    frame:
+        background None
+        at cdscreentransition
+
+        add im.AlphaMask("gui/screen_bg.png", "gui/screen_bg.png")
+
+        ## 中文标题覆盖在英文标题上面
+        text en_title:
+            style "en_title_style"
+            at wide_text
+        text sc_title:
+            style "sc_title_style"
+
+        transclude
+    
+style en_title_style:
+    font "msyhl.ttc"
+    size 46
+    xalign 0.5
+    ypos 56
+    color "#c0c0c0"
+
+style sc_title_style:
+    font "hyzjhj.ttf"
+    size 49
+    xalign 0.5
+    ypos 32
+    color "#868686"
+
+# 文本组件拉宽一点
+transform wide_text:
+    xzoom 1.3
+
+
+## 自定义设置界面
+
+screen system():
+
+    tag menu
+
+    modal True
+
+    zorder 50
+
+    use setting_bg("环境设定", "SYSTEM SETTING")
+
+    frame:
+        background None
+        at cdscreentransition
+
+        vbox:
+            xsize 360
+            xalign 0.5
+            ypos 130
+            spacing 4
+
+            # 全局显示部分
+            frame:
+                xsize 560
+                ysize 90
+                background Frame(im.MatrixColor(gui.frame_bg, im.matrix.colorize(gui.frame_fill_color, gui.frame_stroke_color)), gui.frame_bg_border)
+
+                vbox:
+                    xalign 0.5
+                    yalign 0.5
+                    spacing 5
+
+                    text "全局显示设置":
+                        style "system_text_style"
+
+                    hbox:
+                        xalign 0.5
+                        spacing 20
+
+                        text "全屏":
+                            style "system_text_style"
+
+                        imagebutton:
+                            align (0.5, 0.5)
+                            idle "gui/button/radio_idle.png"
+                            selected_hover "gui/button/radio_selected.png"
+                            selected_idle "gui/button/radio_selected.png"
+                            hover "gui/button/radio_hover.png"
+                            action Preference("display", "fullscreen")
+
+                        text "窗口":
+                            style "system_text_style"
+
+                        imagebutton:
+                            align (0.5, 0.5)
+                            idle "gui/button/radio_idle.png"
+                            selected_hover "gui/button/radio_selected.png"
+                            selected_idle "gui/button/radio_selected.png"
+                            hover "gui/button/radio_hover.png"
+                            action Preference("display", "window")
+
+            # 显示速度部分
+            frame:
+                xsize 560
+                ysize 145
+                xpadding 10
+                background Frame(im.MatrixColor(gui.frame_bg, im.matrix.colorize(gui.frame_fill_color, gui.frame_stroke_color)), gui.frame_bg_border)
+
+                vbox:
+                    xalign 0.5
+                    yalign 0.5
+                    spacing 0
+
+                    text "文字显示速度":
+                        style "system_text_style"
+
+                    hbox:
+                        xfill True
+                        text "SLOW":
+                            style "system_slider_left_style"
+                        text "FAST":
+                            style "system_slider_right_style"
+
+                    bar value Preference("text speed")
+
+                    # 使用空对象制造一些空白
+                    null height 14
+
+                    text "自动翻页速度":
+                        style "system_text_style"
+
+                    hbox:
+                        xfill True
+                        text "SLOW":
+                            style "system_slider_left_style"
+                        text "FAST":
+                            style "system_slider_right_style"
+
+                    bar value Preference("auto-forward time")
+
+
+            # 音量调节部分
+            frame:
+                xsize 560
+                ysize 216
+                xpadding 10
+                background Frame(im.MatrixColor(gui.frame_bg, im.matrix.colorize(gui.frame_fill_color, gui.frame_stroke_color)), gui.frame_bg_border)
+
+                vbox:
+                    xalign 0.5
+                    yalign 0.5
+                    spacing 0
+
+                    text "背景音乐音量":
+                        style "system_text_style"
+                    hbox:
+                        xfill True
+                        text "MIN":
+                            style "system_slider_left_style"
+                        text "MAX":
+                            style "system_slider_right_style"
+
+                    bar value Preference("music volume")
+
+                    null height 14
+
+                    text "效果音音量":
+                        style "system_text_style"
+                    hbox:
+                        xfill True
+                        text "MIN":
+                            style "system_slider_left_style"
+                        text "MAX":
+                            style "system_slider_right_style"
+
+                    bar value Preference("sound volume")
+
+                    null height 14
+
+                    text "人声语音音量":
+                        style "system_text_style"
+                    hbox:
+                        xfill True
+                        text "MIN":
+                            style "system_slider_left_style"
+                        text "MAX":
+                            style "system_slider_right_style"
+
+                    bar value Preference("voice volume")
+
+        use bottom_button
+
+style system_text_style:
+    align (0.5, 0.5)
+    font "hyxjhj.ttf"
+    size 24
+    color "#2c2c2c"
+
+style system_slider_left_style:
+    xalign 0.0
+    font "msyhl.ttc"
+    size 14
+    color "#acacac"
+
+style system_slider_right_style:
+    xalign 1.0
+    font "msyhl.ttc"
+    size 14
+    color "#acacac"
 
 ## 设置界面 ########################################################################
 ##
@@ -1099,12 +1312,11 @@ screen log():
     # 不使用预加载
     predict False
 
-    add im.AlphaMask("gui/log_base.png", "gui/log_base.png") at logscreentransition
-    #add im.MatrixColor("gui/log_base.png", im.matrix.opacity(0.9))
+    use setting_bg("记忆回录", "MEMORIES LOG")
 
     frame:
         style "log_frame_style"
-        at logscreentransition
+        at cdscreentransition
         background None
         
 
@@ -1153,42 +1365,42 @@ screen log():
                 if not _history_list:
                     label _("尚无对话历史记录。")
 
-        frame:
-            style "log_button_frame_style"
+        use bottom_button
 
-            hbox:
-                xalign 0.5
+## 自定义界面底部的通用按钮
+screen bottom_button():
 
-                # return
+    frame:
+        style "bottom_button_frame_style"
+
+        hbox:
+            xalign 0.5
+
+            # return
+            button:
+                background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
+                add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_return_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
+                foreground Text("RETURN", xalign=0.5, yalign = 0.5, size = 15)
+                #action Hide("log", transition=slideawaydown)
+                action Return()
+
+            # title
+            button:
+                background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
+                add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_title_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
+                foreground Text("TITLE", xalign=0.5, yalign = 0.5, size = 15)
+                action MainMenu()
+
+            if renpy.variant("pc"):
+                #exit
                 button:
                     background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
-                    add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_return_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
-                    foreground Text("RETURN", xalign=0.5, yalign = 0.5, size = 15)
-                    #action Hide("log", transition=slideawaydown)
-                    action Return()
-
-                # title
-                button:
-                    background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
-                    add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_title_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
-                    foreground Text("TITLE", xalign=0.5, yalign = 0.5, size = 15)
-                    action MainMenu()
-
-                if renpy.variant("pc"):
-                    #exit
-                    button:
-                        background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
-                        add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_exit_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
-                        foreground Text("EXIT", xalign=0.5, yalign = 0.5, size = 15)
-                        action Quit()
-
-            #textbutton _("返回"):
-                #style "return_button"
-
-                #action Return()
+                    add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_exit_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
+                    foreground Text("EXIT", xalign=0.5, yalign = 0.5, size = 15)
+                    action Quit()
     
 
-transform logscreentransition:
+transform cdscreentransition:
     yoffset 720
 
     on show:
@@ -1213,8 +1425,8 @@ style log_history_window_frame_style:
     bottom_padding 90
     xfill True
 
-# log界面按钮区域样式
-style log_button_frame_style:
+# 界面按钮区域样式
+style bottom_button_frame_style:
     top_padding 680
     xfill True
 
