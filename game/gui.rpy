@@ -236,14 +236,36 @@ define gui.slot_button_text_idle_color = gui.idle_small_color
 define gui.slot_button_text_selected_idle_color = gui.selected_color
 define gui.slot_button_text_selected_hover_color = gui.hover_color
 
+## 自定义存档按钮
+define gui.savedata_bg = "gui/button/empty_savedata.png"
+define gui.savedata_spacing = 6
+define gui.savedata_button_width = 172
+define gui.savedata_button_height = 202
+define gui.savedata_button_borders = Borders(5, 5, 5, 5)
+define gui.savedata_button_text_size = 16
+define gui.savedata_button_text_xalign = 0.5
+define gui.savedata_button_text_font = "hyxjhj.ttf"
+define gui.savedata_button_text_idle_color = "#2c2c2c"
+define gui.savedata_button_text_hover_color = "#9c9c9c"
+define gui.savedata_button_text_selected_idle_color = "#5e5e5e"
+define gui.savedata_button_text_selected_hover_color = "#9c9c9c"
+define gui.savedata_page_button_spacing = 10
+
+
+
 ## 存档所用缩略图的宽度和高度。
-define config.thumbnail_width = 256
-define config.thumbnail_height = 144
+#define config.thumbnail_width = 256
+#define config.thumbnail_height = 144
+define config.thumbnail_width = 160
+define config.thumbnail_height = 90
 
 ## 存档网格中的列数和行数。
 define gui.file_slot_cols = 3
 define gui.file_slot_rows = 2
 
+## 自定义存档网格列数和行数
+define gui.savedata_slot_cols = 5
+define gui.savedata_slot_rows = 2
 
 ## 定位和间距 #######################################################################
 ##

@@ -329,16 +329,18 @@ screen quick_menu():
                     add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_auto_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
                 foreground Text("AUTO", xalign=0.5, yalign = 0.5, size = 15)
                 action Preference("auto-forward", "toggle")
+            # save
             button:
                 background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
                 add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_save_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
                 foreground Text("SAVE", xalign=0.5, yalign = 0.5, size = 15)
-                action ShowMenu("save")
+                action ShowMenu("game_save")
+            # load
             button:
                 background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
                 add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_load_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
                 foreground Text("LOAD", xalign=0.5, yalign = 0.5, size = 15)
-                action ShowMenu("load")
+                action ShowMenu("game_load")
             button:
                 background im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_bg_fill_color, gui.button_bg_stroke_color) * im.matrix.opacity(gui.button_bg_alpha), xalign=0.5, yalign = 0.5)
                 add im.MatrixColor(gui.button_default_image, im.matrix.colorize(gui.button_log_hover_color, gui.button_default_stroke_color), xalign=0.5, yalign = 0.5) at button_fadeinout
@@ -544,7 +546,7 @@ screen main_menu():
                 foreground "preference_button_text"
                 at main_menu_button_hover
                 hover_sound "audio/book_selected.wav"
-                action ShowMenu("preferences")
+                action ShowMenu("system")
             at main_menu_button_in(1.2)
 
         frame:
@@ -798,6 +800,144 @@ style about_text is gui_text
 style about_label_text:
     size gui.label_text_size
 
+## 自定义存档界面
+
+screen game_save():
+
+    use setting_bg("留存记忆", "SAVE MEMORY")
+
+    frame:
+        background None
+        at cdscreentransition
+
+        ## 存档位网格。
+        grid gui.savedata_slot_cols gui.savedata_slot_rows:
+            style_prefix "savedata"
+
+            xalign 0.5
+            yalign 0.5
+
+            spacing gui.savedata_spacing
+
+            for i in range(gui.savedata_slot_cols * gui.savedata_slot_rows):
+
+                $ slot = i + 1
+
+                button:
+                    background Frame(im.MatrixColor(gui.frame_bg, im.matrix.colorize(gui.frame_fill_color, gui.frame_stroke_color)), gui.frame_bg_border)
+                    # 存档界面使用存档接口
+                    action FileSave(slot)
+                    at saveslot_tint
+
+                    has vbox
+
+                    spacing 10
+
+                    # 如果存档位置为空，则返回空存档图片；如果不为空则返回截屏缩略图。
+                    add FileScreenshot(slot, empty = gui.savedata_bg) xalign 0.5
+
+                    text FileSlotName(slot, gui.savedata_slot_cols * gui.savedata_slot_rows, format=_("Number: %s%d")):
+                        style "savedata_name_text"
+
+                    # 存档时间分割在两个文本组件中
+                    text FileTime(slot, format=_("Date: %Y-%m-%d"), empty=_("空存档位")):
+                        style "savedata_time_text"
+                    text FileTime(slot, format=_("Time: %H:%M")):
+                        style "savedata_time_text"
+
+                    key "save_delete" action FileDelete(slot)
+
+        use save_page_buttons
+
+        use bottom_button
+
+
+## 自定义读档界面
+
+screen game_load():
+
+    use setting_bg("回想记忆", "LOAD MEMORY")
+
+    frame:
+        background None
+        at cdscreentransition
+
+        ## 存档位网格。
+        grid gui.savedata_slot_cols gui.savedata_slot_rows:
+            style_prefix "savedata"
+
+            xalign 0.5
+            yalign 0.5
+
+            spacing gui.savedata_spacing
+
+            for i in range(gui.savedata_slot_cols * gui.savedata_slot_rows):
+
+                $ slot = i + 1
+
+                button:
+                    background Frame(im.MatrixColor(gui.frame_bg, im.matrix.colorize(gui.frame_fill_color, gui.frame_stroke_color)), gui.frame_bg_border)
+                    # 读档界面使用读档接口
+                    action FileLoad(slot)
+                    at saveslot_tint
+
+                    has vbox
+
+                    spacing 10
+
+                    # 如果存档位置为空，则返回空存档图片；如果不为空则返回截屏缩略图。
+                    add FileScreenshot(slot, empty = gui.savedata_bg) xalign 0.5
+
+                    text FileSlotName(slot, gui.savedata_slot_cols * gui.savedata_slot_rows, format=_("Number: %s%d")):
+                        style "savedata_name_text"
+
+                    # 存档时间分割在两个文本组件中
+                    text FileTime(slot, format=_("Date: %Y-%m-%d"), empty=_("空存档位")):
+                        style "savedata_time_text"
+                    text FileTime(slot, format=_("Time: %H:%M")):
+                        style "savedata_time_text"
+
+                    key "save_delete" action FileDelete(slot)
+
+        use save_page_buttons
+
+        use bottom_button
+
+style savedata_button is gui_button
+style savedata_button_text is gui_button_text
+style savedata_time_text is savedata_button_text
+style savedata_name_text is savedata_button_text
+
+style savedata_button:
+    properties gui.button_properties("savedata_button")
+
+style savedata_button_text:
+    properties gui.button_text_properties("savedata_button")
+
+transform saveslot_tint:
+    on hover:
+        linear 0.5 matrixcolor BrightnessMatrix(0.05)
+    on idle:
+        linear 0.5 matrixcolor BrightnessMatrix(0.0)
+
+screen save_page_buttons:
+
+    ## 存档页面切换按钮。
+    hbox:
+        xalign 0.5
+        yalign 0.9
+
+        spacing gui.savedata_page_button_spacing
+
+        for page in range(1, 10):
+            #textbutton "[page]" action FilePage(page)
+            imagebutton:
+                idle "gui/button/radio_idle.png"
+                selected_hover "gui/button/radio_selected.png"
+                selected_idle "gui/button/radio_selected.png"
+                hover "gui/button/radio_hover.png"
+                action FilePage(page)
+
 
 ## 读取和保存界面 #####################################################################
 ##
@@ -943,7 +1083,7 @@ screen setting_bg(sc_title, en_title):
         text sc_title:
             style "sc_title_style"
 
-        transclude
+        #transclude
     
 style en_title_style:
     font "msyhl.ttc"
